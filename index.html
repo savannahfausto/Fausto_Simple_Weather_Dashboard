@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Dashboard</title>
+    <link rel="stylesheet" href="./Assets/css/style.css"/>
+</head>
+<body>
+    <!--When log on weather dashboard across the top with gradient blue as backgroudn-->
+    <div>
+        <h1>Weather Dashboard</h1>
+    </div>
+
+    <!--On side: Search for a City: text box with a city as a place holder, search button under then line under search bar-->
+    <div>
+        <div id="city-form">
+            <label for="city-name">Search for a City:</label>
+            <input type="text" name="city-name" id="city-name" placeholder="San Diego"/>
+            <button class= "button" type ="click" id="city-search">Search</button>
+        </div> 
+    </div>
+
+    <!--when search city, city btn of what typed in goes under search button-->
+    <div id="history-container">
+
+    </div>
+
+    <!--on the right side of seach area a box with city name and date in parentheses, under has temp: in fahrenheit, wind, humidity, uv index-->
+    <div id="current-day-container">
+
+    </div>
+
+    <!--then under that is a 5-day-forecast each card has date a picture, temp, wind and humidity-->
+    <div id="future-forecast-container"></div>
+    <script src="./Assets/js/script.js"></script>
+</body>
+</html>
