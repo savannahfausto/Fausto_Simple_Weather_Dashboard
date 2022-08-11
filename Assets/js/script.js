@@ -46,7 +46,7 @@ function getWeather(lat, lon, cityName) {
             }
 
             createCurrentDayForecast(currentDay);
-            //createFiveDayForecast(data);
+            createFiveDayForecast(data);
     
         })
 }
@@ -93,41 +93,45 @@ function createCurrentDayForecast(currentDay) {
     currentDayContainer.appendChild(cardBodyEl);
 }
 
-// function createFiveDayForecast(data){
-//     for (let i = 1; i < 6; i++) {
-//         var forecastData = data.daily[i];
-//         var forecast = {
-//             date: moment.unix(forecastData.dt).format('L'),
-//             icon: forecastData.weather[0].icon,
-//             highTemp: ((((forecastData.temp.max)-273.15)*1.8)+32).toFixed(2),
-//             lowTemp: ((((forecastData.temp.min)-273.15)*1.8)+32).toFixed(2),
-//             wind: forecastData.wind_speed,
-//             humidity: forecastData.humidity,
-//         }
-//         var forecastCard = document.createElement('div');
-//         forecastCard.setAttribute('class', 'card column');
-//         var cardBodyEl = document.createElement('div');
-//         cardBodyEl.setAttribute('class', 'card-body');
-//         var cardHeadingEl = document.createElement('h2');
-//         cardHeadingEl.textContent = currentDay.city + ' (' + currentDay.date + ') ';
-//         var cardHeadingIcon = document.createElement('img');
-//         cardHeadingIcon.setAttribute('src', "http://openweathermap.org/img/w/" + currentDay.icon + ".png");
-    
-//         var cardTemp = document.createElement('p');
-//         cardTemp.textContent = 'Temp: ' + currentDay.temp + ' ˚F';
-//         var cardWind = document.createElement('p');
-//         cardWind.textContent = 'Wind: ' + currentDay.wind + ' MPH';
-//         var cardHumidity = document.createElement('p');
-//         cardHumidity.textContent = 'Humidity: ' + currentDay.humidity + ' %';
-//         var cardUvi = document.createElement('p');
-//         cardUvi.textContent = 'UV Index: '
-//         var cardUviValue = document.createElement('p');
-//         cardUviValue.setAttribute('class', 'd-inline p-1 rounded text-white');
-//         cardUviValue.textContent = currentDay.uvi;
+function createFiveDayForecast(data){
+    for (let i = 1; i < 6; i++) {
+        var forecastData = data.daily[i];
+        var forecast = {
+            date: moment.unix(forecastData.dt).format('L'),
+            icon: forecastData.weather[0].icon,
+            highTemp: ((((forecastData.temp.max)-273.15)*1.8)+32).toFixed(2),
+            lowTemp: ((((forecastData.temp.min)-273.15)*1.8)+32).toFixed(2),
+            wind: forecastData.wind_speed,
+            humidity: forecastData.humidity,
+        }
+        var forecastCard = document.createElement('div');
+        forecastCard.setAttribute('class', 'card column');
+        var cardBodyEl = document.createElement('div');
+        cardBodyEl.setAttribute('class', 'card-body');
+        var cardHeadingEl = document.createElement('h2');
+        cardHeadingEl.textContent = forecast.date;
+        var cardIcon = document.createElement('img');
+        cardIcon.setAttribute('src', "http://openweathermap.org/img/w/" + forecast.icon + ".png");
+        var cardHighTemp = document.createElement('p');
+        cardHighTemp.textContent = 'High Temp: ' + forecast.highTemp + ' ˚F';
+        var cardLowTemp = document.createElement('p');
+        cardLowTemp.textContent = 'Low Temp: ' + forecast.lowTemp + ' ˚F';
+        var cardWind = document.createElement('p');
+        cardWind.textContent = 'Wind: ' + forecast.wind + ' MPH';
+        var cardHumidity = document.createElement('p');
+        cardHumidity.textContent = 'Humidity: ' + forecast.humidity + ' %';
 
+        cardBodyEl.appendChild(cardHeadingEl);
+        cardBodyEl.appendChild(cardIcon);
+        cardBodyEl.appendChild(cardHighTemp);
+        cardBodyEl.appendChild(cardLowTemp);
+        cardBodyEl.appendChild(cardWind);
+        cardBodyEl.appendChild(cardHumidity);
+        forecastCard.appendChild(cardBodyEl);
+        forecastContainer.appendChild(forecastCard);
 
-//     }
-// }        
+    }
+}        
 
 submitCityBtn.addEventListener('click', function(event) {
     event.preventDefault();
