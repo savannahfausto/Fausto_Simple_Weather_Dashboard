@@ -10,23 +10,23 @@
 </head>
 <body>
     <!--When log on weather dashboard across the top with gradient blue as background-->
-    <div>
-        <h1>Weather Dashboard</h1>
-    </div>
+    
+    <h1 class="p-3 font-weight-bold page-title">Weather Dashboard</h1>
+    
 
     <!--On side: Search for a City: text box with a city as a place holder, search button under then line under search bar-->
-    <div class="container">
+    <div class="m-2">
         <div class="row">
             <form class="col-3" id="city-form form-group">
-                <label for="city-name">Search for a City:</label>
+                <label for="city-name"><h2 class="font-weight-bold">Search for a City:</h2></label>
                 <input type="text" name="city-name" class="form-control" id="city-name" placeholder="San Diego"/>
                 <button class= "btn btn-primary btn-sm btn-block mt-2" type ="submit" id="city-search">Search</button>
             </form>       
             
-            <!--when search city, city btn of what typed in goes under search button-->
+            <!-- when search city, city btn of what typed in goes under search button
             <div id="history-container">
                 
-            </div>
+            </div> -->
             
             <!--on the right side of seach area a box with city name and date in parentheses, under has temp: in fahrenheit, wind, humidity, uv index-->
             <div id="current-day-container" class="col-9">
@@ -37,7 +37,8 @@
         <!--then under that is a 5-day-forecast each card has date a picture, temp, wind and humidity-->
         <div class="row">
             <div class="col-9 offset-3">
-                <div class="row" id="forecast-container">
+                <div id="forecast-heading"></div>
+                <div class="row justify-content-between" id="forecast-container">
 
                 </div>
 

@@ -1,9 +1,16 @@
 body {
-    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif
+    /* font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif */
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif
 }
 
 h1 {
     text-align: center;
-    background-color: blue;
+    background: linear-gradient(to right, rgb(31, 73, 172), rgb(30, 6, 72));
     color: white;
+}
+
+/* overrides bootstrap negative margins that cause x-axis scrolling */
+.row {
+    margin-left: 0 px;
+    margin-right: 0px;
 }

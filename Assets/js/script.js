@@ -1,6 +1,7 @@
 var cityNameEl = document.querySelector('#city-name');
 var submitCityBtn = document.querySelector('#city-search');
 var currentDayContainer = document.querySelector('#current-day-container');
+var forecastHeading = document.querySelector('#forecast-heading');
 var forecastContainer = document.querySelector('#forecast-container');
 
 
@@ -10,20 +11,6 @@ var forecastContainer = document.querySelector('#forecast-container');
 //type in search city 
 
 //when click/submit 
-    //create box that contains
-        //name of city (date) weathericon
-        //temp:
-        //wind:
-        //humidity:
-        //UV index: with colors for weather favorable, moderate, severe
-    //create a 5-day-forecast:
-        //5 cards
-            //each card has 
-                //date M/DD/YYYY
-                //weather icon
-                //temp
-                //wind
-                //humidity
 //create button of each city search that can toggle between, add to history
 //save 
 function getWeather(lat, lon, cityName) {
@@ -53,10 +40,11 @@ function getWeather(lat, lon, cityName) {
 
 function createCurrentDayForecast(currentDay) {
     //console.log('currentDay', currentDay);
-    currentDayContainer.setAttribute('class', 'card');
+    currentDayContainer.setAttribute('class', 'card col-9');
     var cardBodyEl = document.createElement('div');
     cardBodyEl.setAttribute('class', 'card-body');
     var cardHeadingEl = document.createElement('h2');
+    cardHeadingEl.setAttribute('class', 'font-weight-bold');
     var cardHeadingIcon = document.createElement('img');
     cardHeadingIcon.setAttribute('src', "http://openweathermap.org/img/w/" + currentDay.icon + ".png");
     cardHeadingEl.textContent = currentDay.city + ' (' + currentDay.date + ') ';
@@ -94,6 +82,12 @@ function createCurrentDayForecast(currentDay) {
 }
 
 function createFiveDayForecast(data){
+    var title = document.createElement('h2');
+    title.setAttribute('class', 'font-weight-bold');
+    title.textContent = '5-Day Forecast:'
+
+    forecastHeading.append(title);
+
     for (let i = 1; i < 6; i++) {
         var forecastData = data.daily[i];
         var forecast = {
@@ -108,7 +102,7 @@ function createFiveDayForecast(data){
         forecastCard.setAttribute('class', 'card column');
         var cardBodyEl = document.createElement('div');
         cardBodyEl.setAttribute('class', 'card-body');
-        var cardHeadingEl = document.createElement('h2');
+        var cardHeadingEl = document.createElement('h3');
         cardHeadingEl.textContent = forecast.date;
         var cardIcon = document.createElement('img');
         cardIcon.setAttribute('src', "http://openweathermap.org/img/w/" + forecast.icon + ".png");
