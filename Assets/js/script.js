@@ -4,15 +4,16 @@ var currentDayContainer = document.querySelector('#current-day-container');
 var forecastHeading = document.querySelector('#forecast-heading');
 var forecastContainer = document.querySelector('#forecast-container');
 
+var cityNames = [];
 
+function cityNameDisplay (str) {
+    var splitStr = str.toLowerCase().split(' ');
+    for (let i = 0; i < splitStr.length; i++) {
+        splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
+    }
+    return splitStr.join(' ');
+}
 
-
-
-//type in search city 
-
-//when click/submit 
-//create button of each city search that can toggle between, add to history
-//save 
 function getWeather(lat, lon, cityName) {
     var requestUrl = 'https://api.openweathermap.org/data/2.5/onecall?lat=' + lat + '&lon=' + lon + '&appid=ffe237b23dcad850efe02352dc9815ee';
     fetch (requestUrl) 
@@ -40,7 +41,7 @@ function getWeather(lat, lon, cityName) {
 
 function createCurrentDayForecast(currentDay) {
     //console.log('currentDay', currentDay);
-    currentDayContainer.setAttribute('class', 'card col-9');
+    currentDayContainer.setAttribute('class', 'card col-9 border-dark');
     var cardBodyEl = document.createElement('div');
     cardBodyEl.setAttribute('class', 'card-body');
     var cardHeadingEl = document.createElement('h2');
@@ -99,7 +100,7 @@ function createFiveDayForecast(data){
             humidity: forecastData.humidity,
         }
         var forecastCard = document.createElement('div');
-        forecastCard.setAttribute('class', 'card column');
+        forecastCard.setAttribute('class', 'card column custom-card');
         var cardBodyEl = document.createElement('div');
         cardBodyEl.setAttribute('class', 'card-body');
         var cardHeadingEl = document.createElement('h3');
@@ -125,11 +126,19 @@ function createFiveDayForecast(data){
         forecastContainer.appendChild(forecastCard);
 
     }
-}        
+}  
+
+
 
 submitCityBtn.addEventListener('click', function(event) {
     event.preventDefault();
-    var cityName = cityNameEl.value.trim();
+    
+    currentDayContainer.innerHTML='';
+    forecastHeading.innerHTML='';
+    forecastContainer.innerHTML='';
+        
+    var cityName = cityNameDisplay(cityNameEl.value.trim());
+    console.log('cityName1', cityName);
     var requestUrl = 'https://api.openweathermap.org/geo/1.0/direct?q=' + cityName + '&appid=ffe237b23dcad850efe02352dc9815ee';
     fetch (requestUrl)
         .then (function (response) {
@@ -142,3 +151,7 @@ submitCityBtn.addEventListener('click', function(event) {
         })
     cityNameEl.value = '';
 })
+
+//when click on search button 
+    //create a button that gets from local storage this information and pastes it on the screen
+    //push city name into array

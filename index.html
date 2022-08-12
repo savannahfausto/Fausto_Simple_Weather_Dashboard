@@ -17,16 +17,18 @@
     <!--On side: Search for a City: text box with a city as a place holder, search button under then line under search bar-->
     <div class="m-2">
         <div class="row">
-            <form class="col-3" id="city-form form-group">
-                <label for="city-name"><h2 class="font-weight-bold">Search for a City:</h2></label>
-                <input type="text" name="city-name" class="form-control" id="city-name" placeholder="San Diego"/>
-                <button class= "btn btn-primary btn-sm btn-block mt-2" type ="submit" id="city-search">Search</button>
-            </form>       
-            
-            <!-- when search city, city btn of what typed in goes under search button
-            <div id="history-container">
-                
-            </div> -->
+            <div class="col-3">
+                <form id="city-form form-group">
+                    <label for="city-name"><h2 class="font-weight-bold">Search for a City:</h2></label>
+                    <input type="text" name="city-name" class="form-control border-dark" id="city-name" placeholder="San Diego"/>
+                    <button class= "btn btn-primary btn-sm btn-block mt-2" type ="submit" id="city-search">Search</button>
+                </form> 
+
+                <!-- when search city, city btn of what typed in goes under search button -->
+                <div id="history-container">
+                    
+                </div>
+            </div>
             
             <!--on the right side of seach area a box with city name and date in parentheses, under has temp: in fahrenheit, wind, humidity, uv index-->
             <div id="current-day-container" class="col-9">

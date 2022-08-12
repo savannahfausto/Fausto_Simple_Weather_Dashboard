@@ -14,3 +14,8 @@ h1 {
     margin-left: 0 px;
     margin-right: 0px;
 }
+
+.custom-card {
+    background-color: rgb(59, 68, 94);
+    color: white;
+}
