@@ -1,10 +1,15 @@
 var cityNameEl = document.querySelector('#city-name');
 var submitCityBtn = document.querySelector('#city-search');
+var historyContainer = document.querySelector('#history-container');
 var currentDayContainer = document.querySelector('#current-day-container');
 var forecastHeading = document.querySelector('#forecast-heading');
 var forecastContainer = document.querySelector('#forecast-container');
 
-var cityNames = [];
+var cityNames = JSON.parse(localStorage.getItem('cityNames'));
+
+if (!cityNames) {
+    cityNames = [];
+}
 
 function cityNameDisplay (str) {
     var splitStr = str.toLowerCase().split(' ');
@@ -12,6 +17,20 @@ function cityNameDisplay (str) {
         splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
     }
     return splitStr.join(' ');
+}
+
+function getLatLon(cityName) {
+    var requestUrl = 'https://api.openweathermap.org/geo/1.0/direct?q=' + cityName + '&appid=ffe237b23dcad850efe02352dc9815ee';
+    fetch (requestUrl)
+        .then (function (response) {
+            return response.json();
+
+        })    
+        .then(function(data){
+            console.log("data", data[0])
+            getWeather(data[0].lat, data[0].lon, cityName);
+        })
+
 }
 
 function getWeather(lat, lon, cityName) {
@@ -35,6 +54,7 @@ function getWeather(lat, lon, cityName) {
 
             createCurrentDayForecast(currentDay);
             createFiveDayForecast(data);
+            saveCity(cityName);
     
         })
 }
@@ -82,7 +102,7 @@ function createCurrentDayForecast(currentDay) {
     currentDayContainer.appendChild(cardBodyEl);
 }
 
-function createFiveDayForecast(data){
+function createFiveDayForecast(data) {
     var title = document.createElement('h2');
     title.setAttribute('class', 'font-weight-bold');
     title.textContent = '5-Day Forecast:'
@@ -124,11 +144,53 @@ function createFiveDayForecast(data){
         cardBodyEl.appendChild(cardHumidity);
         forecastCard.appendChild(cardBodyEl);
         forecastContainer.appendChild(forecastCard);
-
     }
 }  
 
+function saveCity(cityName) {
+    //when saving an array of data, treat it like a single item have to parse/stringify it 
+    if (!cityNames.includes(cityName)) {
+    cityNames.push(cityName);
+    localStorage.setItem('cityNames', JSON.stringify(cityNames));
 
+    var newCityBtn = document.createElement('button');
+        newCityBtn.textContent = cityName;
+        newCityBtn.setAttribute('class', 'btn btn-secondary');
+
+        newCityBtn.addEventListener('click', function(event){
+            currentDayContainer.innerHTML='';
+            forecastHeading.innerHTML='';
+            forecastContainer.innerHTML='';
+
+            var nameOfCity = event.target.textContent
+            getLatLon(nameOfCity);
+        })
+
+        historyContainer.appendChild(newCityBtn);
+    }
+}
+
+//getting from local storage on load, already searched for these items
+function getCityInfo() {
+    for (i = 0; i < cityNames.length; i++) {
+        var city = cityNames[i]
+        var cityBtn = document.createElement('button');
+        cityBtn.textContent = city;
+        cityBtn.setAttribute('class', 'btn btn-secondary');
+
+        cityBtn.addEventListener('click', function(event){
+            currentDayContainer.innerHTML='';
+            forecastHeading.innerHTML='';
+            forecastContainer.innerHTML='';
+
+            var nameOfCity = event.target.textContent
+            getLatLon(nameOfCity);
+        })
+        historyContainer.appendChild(cityBtn);
+    }
+}
+
+getCityInfo();
 
 submitCityBtn.addEventListener('click', function(event) {
     event.preventDefault();
@@ -139,19 +201,9 @@ submitCityBtn.addEventListener('click', function(event) {
         
     var cityName = cityNameDisplay(cityNameEl.value.trim());
     console.log('cityName1', cityName);
-    var requestUrl = 'https://api.openweathermap.org/geo/1.0/direct?q=' + cityName + '&appid=ffe237b23dcad850efe02352dc9815ee';
-    fetch (requestUrl)
-        .then (function (response) {
-            return response.json();
+    
+    getLatLon(cityName);
 
-        })
-        .then(function(data){
-            console.log("data", data[0])
-            getWeather(data[0].lat, data[0].lon, cityName);
-        })
     cityNameEl.value = '';
 })
 
-//when click on search button 
-    //create a button that gets from local storage this information and pastes it on the screen
-    //push city name into array
