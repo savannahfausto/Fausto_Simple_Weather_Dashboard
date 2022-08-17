@@ -1,16 +1,21 @@
+//global variables getting elements from index.html
 var cityNameEl = document.querySelector('#city-name');
 var submitCityBtn = document.querySelector('#city-search');
 var historyContainer = document.querySelector('#history-container');
+var historyBreak = document.querySelector('#break');
 var currentDayContainer = document.querySelector('#current-day-container');
 var forecastHeading = document.querySelector('#forecast-heading');
 var forecastContainer = document.querySelector('#forecast-container');
 
+//gets saved cities out of localStorage and saves in cityNames variable
 var cityNames = JSON.parse(localStorage.getItem('cityNames'));
 
+//if there is nothing in local storage, set cityNames equal to an empty array
 if (!cityNames) {
     cityNames = [];
 }
 
+//function changes user city input so that the first letter is capitalized
 function cityNameDisplay (str) {
     var splitStr = str.toLowerCase().split(' ');
     for (let i = 0; i < splitStr.length; i++) {
@@ -19,6 +24,7 @@ function cityNameDisplay (str) {
     return splitStr.join(' ');
 }
 
+//first API call gets the longitude and latitude for the city name and passes it in to our next API call getWeather()
 function getLatLon(cityName) {
     var requestUrl = 'https://api.openweathermap.org/geo/1.0/direct?q=' + cityName + '&appid=ffe237b23dcad850efe02352dc9815ee';
     fetch (requestUrl)
@@ -33,6 +39,7 @@ function getLatLon(cityName) {
 
 }
 
+//takes in lat and lon data from the first API call, returns data that we can use for currentDay and 5-dayForecast printing
 function getWeather(lat, lon, cityName) {
     var requestUrl = 'https://api.openweathermap.org/data/2.5/onecall?lat=' + lat + '&lon=' + lon + '&appid=ffe237b23dcad850efe02352dc9815ee';
     fetch (requestUrl) 
@@ -42,6 +49,7 @@ function getWeather(lat, lon, cityName) {
         })
         .then (function (data) {
             console.log("data", data);
+            //create currentDay object from data in this API call
             var currentDay = {
                 city: cityName, 
                 date: moment.unix(data.current.dt).format('dddd, MMMM Do YYYY'),
@@ -51,7 +59,7 @@ function getWeather(lat, lon, cityName) {
                 humidity: data.current.humidity,
                 uvi: data.current.uvi,
             }
-
+            //invoke functions to create the current day, 5 day forecast and to save the city into local storage
             createCurrentDayForecast(currentDay);
             createFiveDayForecast(data);
             saveCity(cityName);
@@ -59,8 +67,10 @@ function getWeather(lat, lon, cityName) {
         })
 }
 
+//gets the currentDay weather information from the object previously created, this function also appends this information to index.html
+//uses bootstrap helper classes for styling
 function createCurrentDayForecast(currentDay) {
-    //console.log('currentDay', currentDay);
+
     currentDayContainer.setAttribute('class', 'card col-9 border-dark');
     var cardBodyEl = document.createElement('div');
     cardBodyEl.setAttribute('class', 'card-body');
@@ -82,6 +92,7 @@ function createCurrentDayForecast(currentDay) {
     cardUviValue.setAttribute('class', 'd-inline p-1 rounded text-white');
     cardUviValue.textContent = currentDay.uvi;
 
+    //changes color background of UVI based on severity
      if (cardUviValue.textContent > 7) {
             cardUviValue.setAttribute('style', 'background: red');
                 
@@ -102,6 +113,8 @@ function createCurrentDayForecast(currentDay) {
     currentDayContainer.appendChild(cardBodyEl);
 }
 
+//passes in data from the second API call and creates a forecast object that will be used to create a card for the next 5 days of weather
+//uses bootstrap helper classes for styling
 function createFiveDayForecast(data) {
     var title = document.createElement('h2');
     title.setAttribute('class', 'font-weight-bold');
@@ -147,54 +160,71 @@ function createFiveDayForecast(data) {
     }
 }  
 
+//if the city has not been saved, pushes the city into the array to save and create a history button for it, re-invoking first api call to store that information in the history button
 function saveCity(cityName) {
     //when saving an array of data, treat it like a single item have to parse/stringify it 
     if (!cityNames.includes(cityName)) {
-    cityNames.push(cityName);
-    localStorage.setItem('cityNames', JSON.stringify(cityNames));
-
-    var newCityBtn = document.createElement('button');
+        cityNames.push(cityName);
+        localStorage.setItem('cityNames', JSON.stringify(cityNames));
+        
+        var newCityBtn = document.createElement('button');
         newCityBtn.textContent = cityName;
-        newCityBtn.setAttribute('class', 'btn btn-secondary');
-
+        newCityBtn.setAttribute('class', 'btn btn-secondary btn-block mt-2');
+        
         newCityBtn.addEventListener('click', function(event){
+            //empties containers so that multiple cities arent displayed
             currentDayContainer.innerHTML='';
             forecastHeading.innerHTML='';
             forecastContainer.innerHTML='';
-
+            
             var nameOfCity = event.target.textContent
             getLatLon(nameOfCity);
         })
 
-        historyContainer.appendChild(newCityBtn);
-    }
+        var hrEl = document.querySelector('hr')
+        if (!hrEl) {
+            var horizontalBreak = document.createElement('hr');
+            horizontalBreak.setAttribute('class', 'bg-dark');
+            historyBreak.appendChild(horizontalBreak);
+        }
+    historyContainer.appendChild(newCityBtn);
+}
 }
 
-//getting from local storage on load, already searched for these items
+
+//on loading of the page, gets cities saved from local storage and again makes history buttons functional by invoking first API call
 function getCityInfo() {
+    var horizontalBreak = document.createElement('hr');
+    horizontalBreak.setAttribute('class', 'bg-dark');
+    
     for (i = 0; i < cityNames.length; i++) {
         var city = cityNames[i]
         var cityBtn = document.createElement('button');
         cityBtn.textContent = city;
-        cityBtn.setAttribute('class', 'btn btn-secondary');
-
+        cityBtn.setAttribute('class', 'btn btn-secondary btn-block mt-2');
+        
         cityBtn.addEventListener('click', function(event){
+            //empties containers so that multiple cities arent displayed
             currentDayContainer.innerHTML='';
             forecastHeading.innerHTML='';
             forecastContainer.innerHTML='';
-
+            
             var nameOfCity = event.target.textContent
             getLatLon(nameOfCity);
         })
+        historyBreak.appendChild(horizontalBreak);
         historyContainer.appendChild(cityBtn);
     }
 }
 
+//invokes previous functions
 getCityInfo();
 
+//event listener on submit button. when clicked on it takes the user input, passes it into the helper function to make first lettter in each word capital, and passes that into our first API call 
 submitCityBtn.addEventListener('click', function(event) {
     event.preventDefault();
     
+    //empties containers so that multiple cities arent displayed
     currentDayContainer.innerHTML='';
     forecastHeading.innerHTML='';
     forecastContainer.innerHTML='';
@@ -204,6 +234,6 @@ submitCityBtn.addEventListener('click', function(event) {
     
     getLatLon(cityName);
 
+    //empties input field so user can type in new city
     cityNameEl.value = '';
 })
-
